@@ -18,95 +18,102 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 -->
 <html>
 	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta charset='UTF-8' />
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
 		<title>wwwouaiebe - base64</title>
-		<style>
-		</style>
 	</head>
 	<body>
 	<h1>Encoding et decoding to base64</h1>
 		<h2>Text to base64 or base64 to text</h2>
 		<h3>Text</h3>
 		<p>
-			<textarea cols="128" rows="6" name="Decode" id="Decode" placeholder="Text" spellcheck="false" ></textarea>
+			<textarea cols='128' rows='6' name='DecodeTextArea' id='DecodeTextArea' placeholder='Text' spellcheck='false' ></textarea>
 		</p>
-		<p><button onclick="encode( true )" value="To base64" >To base64 and to clipboard</button><button onclick="encode( false )" value="To base64" >To base64 only</button></p>
+		<p><button id='TextToBase64AndClipboard'>To base64 and to clipboard</button><button id='TextToBase64'>To base64 only</button></p>
 		<h3>Base64</h3>
 		<p>
-			<textarea cols="128" rows="6" name="Encode" id="Encode" placeholder="base64" spellcheck="false" ></textarea>
+			<textarea cols='128' rows='6' name='EncodeTextArea' id='EncodeTextArea' placeholder='base64' spellcheck='false' ></textarea>
 		</p>
-		<p><button onclick="decode( true )" value="To text" >To text and to clipboard</button><button onclick="decode( false )" value="To text" >To text only</button></p>
+		<p><button id='Base64ToTextAndClipboard'>To text and to clipboard</button><button id='Base64ToText'>To text only</button></p>
 		<h2>Image to base64</h2>
 		<p>Select an image:</p>
-		<div><input type='file' accept="image/*" id="ImageInput" /></div>
+		<div><input type='file' accept='image/*' id='ImageInput' /></div>
 		<p>
-			<textarea cols="128" rows="10" name="ImageEncode" id="ImageEncode" placeholder="Image to base64" spellcheck="false" ></textarea>
+			<textarea cols='128' rows='10' name='ImageEncode' id='ImageEncode' placeholder='Image to base64' spellcheck='false' ></textarea>
 		</p>
-		<p><button onclick="copy()" value="Copy" >To clipboard</button></p>
+		<p><button id='ImageBase64ToClipBoard' >Image Base64 to clipboard</button></p>
 		<p>
-			<img id="Image" src="" />
+			<img id='Image' src='' />
 		</p>
 		<h2>Base64 to image</h2>
 		<p>
-			<textarea cols="128" rows="10" name="ImageDecode" id="ImageDecode" placeholder="Base64 to image" spellcheck="false" ></textarea>
+			<textarea cols='128' rows='10' name='ImageDecodeTextArea' id='ImageDecodeTextArea' placeholder='Base64 to image' spellcheck='false' ></textarea>
 		</p>
-		<p><button onclick="decodeImage()" value="Copy" >To image</button><button onclick="saveImage()" value="Copy" >Save file...</button></p>
+		<p><button id='Base64ToImage'>To image</button><button id='SaveImage' >Save file...</button></p>
 		<p>
-			<img id="decodedImage" src="" />
+			<img id='DecodedImage' src='' />
 		</p>
 		<script>
-			function decodeImage ( event ) {
-				document.getElementById ( "decodedImage" ).src = document.getElementById ( "ImageDecode" ).value; 
+			function textToBase64 ( ) {
+				document.getElementById('EncodeTextArea').value = btoa ( unescape(encodeURIComponent( document.getElementById ( 'DecodeTextArea' ).value ) ) );
 			};
+			document.getElementById ( 'TextToBase64AndClipboard' ).addEventListener ( 
+				'click',
+				() => {
+					textToBase64 ( );
+					let textArea = document.getElementById('EncodeTextArea');
+					textArea.focus ( );
+					textArea.select ( );
+					document.execCommand ( 'copy' );
+				}
+			); 
+			document.getElementById ( 'TextToBase64' ).addEventListener ( 'click', textToBase64 );
+			function base64ToText ( ) {
+				document.getElementById ( 'DecodeTextArea' ).value = decodeURIComponent ( escape( atob ( document.getElementById ( 'EncodeTextArea' ).value ) ) );
+			}
+			document.getElementById ( 'Base64ToTextAndClipboard' ).addEventListener (
+				'click',
+				( ) => {
+					base64ToText ( );
+					let textArea = document.getElementById ( 'DecodeTextArea' );
+					textArea.focus ( );
+					textArea.select ( );
+					document.execCommand ( 'copy' );
+				}
+			);
+			document.getElementById ( 'Base64ToText' ).addEventListener ( 'click', base64ToText );
+			function base64ToImage ( event ) {
+				document.getElementById ( 'DecodedImage' ).src = document.getElementById ( 'ImageDecodeTextArea' ).value; 
+			};
+			document.getElementById ( 'Base64ToImage' ).addEventListener ( 'click', base64ToImage );
 			function saveImage ( event ) {
 				var element = document.createElement ( 'a' );
-				element.setAttribute( 'href', document.getElementById ( "ImageDecode" ).value );
+				element.setAttribute( 'href', document.getElementById ( 'ImageDecodeTextArea' ).value );
 				element.setAttribute( 'download', 'img' );
 				element.style.display = 'none';
-				document.body.appendChild ( element );
 				element.click ( );
-				document.body.removeChild ( element );
 			};
-			
+			document.getElementById ( 'SaveImage' ).addEventListener ( 'click', saveImage );
 			function encodeImage ( event ) {
 				var fileReader = new FileReader( );
 				fileReader.onloadend  = function ( event ) {
-					var textArea = document.getElementById("ImageEncode");
+					var textArea = document.getElementById('ImageEncode');
 					textArea.value = fileReader.result;
-					document.getElementById ( "Image" ).src = fileReader.result;
+					document.getElementById ( 'Image' ).src = fileReader.result;
 					textArea.focus ( );
 					textArea.select ( );
 					document.execCommand ( 'copy' );
 				};
 				fileReader.readAsDataURL ( event.target.files [ 0 ] );
 			};
-			document.getElementById ( "ImageInput" ).addEventListener ( 'change' , encodeImage);
-
-			function copy ( ) {
-				var textArea = document.getElementById("ImageEncode");
+			document.getElementById ( 'ImageInput' ).addEventListener ( 'change' , encodeImage);
+			function imageBase64ToClipBoard ( ) {
+				var textArea = document.getElementById('ImageEncode');
 				textArea.focus ( );
 				textArea.select ( );
 				document.execCommand ( 'copy' );
 			};
-			
-			function encode ( toClipboard ) {
-				var Encode = btoa ( unescape(encodeURIComponent( document.getElementById ( "Decode" ).value ) ) );
-				var textArea = document.getElementById("Encode");
-				textArea.value = Encode;
-				textArea.focus ( );
-				textArea.select ( toClipboard );
-				if ( toClipboard ) { document.execCommand ( 'copy' ) };
-			};
-
-			function decode ( toClipboard ) {
-				var Decode = decodeURIComponent ( escape( atob ( document.getElementById ( "Encode" ).value ) ) );
-				var textArea = document.getElementById ( "Decode" );
-				textArea.value = Decode;
-				textArea.focus ( );
-				textArea.select ( );
-				if ( toClipboard ) { document.execCommand ( 'copy' ) };
-			};
+			document.getElementById ( 'ImageBase64ToClipBoard' ).addEventListener ( 'click',  imageBase64ToClipBoard ); 
 		</script>
 	</body>
 </html>
