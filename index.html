@@ -55,7 +55,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		</p>
 		<script>
 			function textToBase64 ( ) {
-				document.getElementById('EncodeTextArea').value = btoa ( unescape(encodeURIComponent( document.getElementById ( 'DecodeTextArea' ).value ) ) );
+				document.getElementById('EncodeTextArea').value = btoa ( document.getElementById ( 'DecodeTextArea' ).value );
 			};
 			document.getElementById ( 'TextToBase64AndClipboard' ).addEventListener ( 
 				'click',
@@ -69,7 +69,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			); 
 			document.getElementById ( 'TextToBase64' ).addEventListener ( 'click', textToBase64 );
 			function base64ToText ( ) {
-				document.getElementById ( 'DecodeTextArea' ).value = decodeURIComponent ( escape( atob ( document.getElementById ( 'EncodeTextArea' ).value ) ) );
+				document.getElementById ( 'DecodeTextArea' ).value = atob ( document.getElementById ( 'EncodeTextArea' ).value );
 			}
 			document.getElementById ( 'Base64ToTextAndClipboard' ).addEventListener (
 				'click',
