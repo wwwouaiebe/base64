@@ -30,6 +30,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			<textarea cols='128' rows='6' name='DecodeTextArea' id='DecodeTextArea' placeholder='Text' spellcheck='false' ></textarea>
 		</p>
 		<p><button id='TextToBase64AndClipboard'>To base64 and to clipboard</button><button id='TextToBase64'>To base64 only</button></p>
+		<p id='ErrorBtoa' style='color:red'></p>
 		<h3>Base64</h3>
 		<p>
 			<textarea cols='128' rows='6' name='EncodeTextArea' id='EncodeTextArea' placeholder='base64' spellcheck='false' ></textarea>
@@ -55,7 +56,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		</p>
 		<script>
 			function textToBase64 ( ) {
-				document.getElementById('EncodeTextArea').value = btoa ( document.getElementById ( 'DecodeTextArea' ).value );
+				try {
+					document.getElementById ( 'ErrorBtoa' ).innerHTML = '';
+					document.getElementById('EncodeTextArea').value = btoa ( document.getElementById ( 'DecodeTextArea' ).value );
+				}
+				catch ( e ) {
+					document.getElementById ( 'ErrorBtoa' ).innerHTML = 'The text contains an invalid character. Only characters in the Unicode Latin and Unicode Latin-1 supplement tables can be used';
+					document.getElementById('EncodeTextArea').value = '';
+				}
 			};
 			document.getElementById ( 'TextToBase64AndClipboard' ).addEventListener ( 
 				'click',
