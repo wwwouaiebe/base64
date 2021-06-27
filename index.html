@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<title>wwwouaiebe - base64</title>
 	</head>
 	<body>
-	<h1>Encoding et decoding to base64</h1>
+		<h1>Encoding et decoding to base64</h1>
 		<h2>Text to base64 or base64 to text</h2>
 		<!-- text to base 64 -->
 		<h3>Text</h3>
@@ -65,6 +65,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			<button id='SaveImageToFileBtn' >Save image to file...</button></p>
 		<p>
 			<img id='DecodedImagePreview' src='' />
+		</p>
+		<h1>UUID</h1>
+		<h2>New UUID based on random numbers</h2>
+		<p>
+			<button id='UUIDBtn'>new UUID</button>
+		</p>
+		<p>
+			<textarea cols='64' rows='1' id='UUID' spellcheck='false' ></textarea>
 		</p>
 		<script>
 			// text to base 64
@@ -138,6 +146,26 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 				document.getElementById ( 'DecodedImagePreview' ).src = document.getElementById ( 'Base64ToImageArea' ).value; 
 			};
 			document.getElementById ( 'Base64ToImageBtn' ).addEventListener ( 'click', base64ToImage );
+			function getUUID ( ) {
+				const ZERO = 0;
+				const UUID_LENGHT = 8;
+				const UUID_STRLENGHT = 4;
+				const HEXADECIMAL = 16;
+				let randomValues = new Uint16Array ( UUID_LENGHT );
+				const UUID_SEPARATORS = [ '', '-', '-', '-', '-', '', '', '' ];
+				window.crypto.getRandomValues ( randomValues );
+				let UUID = '';
+				for ( let counter = ZERO; counter < UUID_LENGHT; counter ++ ) {
+					UUID += randomValues [ counter ].toString ( HEXADECIMAL ).padStart ( UUID_STRLENGHT, '0' ) +
+						UUID_SEPARATORS [ counter ];
+				}
+				var UUIDArea = document.getElementById ( 'UUID' );
+				UUIDArea.value = UUID;
+				UUIDArea.focus ( );
+				UUIDArea.select ( );
+				document.execCommand ( 'copy' );
+			}
+			document.getElementById ( 'UUIDBtn' ).addEventListener ( 'click', getUUID );
 		</script>
 	</body>
 </html>
