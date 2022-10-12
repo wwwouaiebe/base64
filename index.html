@@ -75,6 +75,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			<textarea cols='64' rows='1' id='UUID' spellcheck='false' ></textarea>
 		</p>
 		<script>
+		
+			/*
+			About navigator.clipboard.writeText:
+			navigator.clipboard.writeText work without Permission in the active tab.
+			Currently ( october 2022 ) FF don't know 'clipboard-write' permission, so it's not possible to copy to the clipboard in the function encodeImage
+			*/
 			// text to base 64
 			function textToBase64 ( ) {
 				try {
@@ -91,12 +97,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 				() => {
 					textToBase64 ( );
 					let textArea = document.getElementById('Base64Area');
-					textArea.focus ( );
-					textArea.select ( );
-					document.execCommand ( 'copy' );
+					navigator.clipboard.writeText ( textArea.value );
 				}
 			); 
 			document.getElementById ( 'TextToBase64Btn' ).addEventListener ( 'click', textToBase64 );
+			
 			// base 64 to text
 			function base64ToText ( ) {
 				document.getElementById ( 'TextArea' ).value = atob ( document.getElementById ( 'Base64Area' ).value );
@@ -106,12 +111,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 				( ) => {
 					base64ToText ( );
 					let textArea = document.getElementById ( 'TextArea' );
-					textArea.focus ( );
-					textArea.select ( );
-					document.execCommand ( 'copy' );
+					navigator.clipboard.writeText ( textArea.value );
 				}
 			);
 			document.getElementById ( 'Base64ToTextBtn' ).addEventListener ( 'click', base64ToText );
+
 			// image to base 64
 			function saveImageToFile ( event ) {
 				var element = document.createElement ( 'a' );
@@ -127,25 +131,23 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 					var textArea = document.getElementById('ImageToBase64Area');
 					textArea.value = fileReader.result;
 					document.getElementById ( 'ImagePreview' ).src = fileReader.result;
-					textArea.focus ( );
-					textArea.select ( );
-					document.execCommand ( 'copy' );
 				};
 				fileReader.readAsDataURL ( event.target.files [ 0 ] );
 			};
 			document.getElementById ( 'ImageFileInput' ).addEventListener ( 'change' , encodeImage);
 			function imageBase64ToClipBoard ( ) {
 				var textArea = document.getElementById('ImageToBase64Area');
-				textArea.focus ( );
-				textArea.select ( );
-				document.execCommand ( 'copy' );
+				navigator.clipboard.writeText ( textArea.value );
 			};
 			document.getElementById ( 'ImageBase64ToClipBoardBtn' ).addEventListener ( 'click',  imageBase64ToClipBoard ); 
+
 			// base 64 to image
 			function base64ToImage ( event ) {
 				document.getElementById ( 'DecodedImagePreview' ).src = document.getElementById ( 'Base64ToImageArea' ).value; 
 			};
 			document.getElementById ( 'Base64ToImageBtn' ).addEventListener ( 'click', base64ToImage );
+			
+			// UUID
 			function getUUID ( ) {
 				const ZERO = 0;
 				const UUID_LENGHT = 16;
@@ -180,9 +182,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 				}
 				var UUIDArea = document.getElementById ( 'UUID' );
 				UUIDArea.value = UUID;
-				UUIDArea.focus ( );
-				UUIDArea.select ( );
-				document.execCommand ( 'copy' );
+				navigator.clipboard.writeText ( UUID );
 			}
 			document.getElementById ( 'UUIDBtn' ).addEventListener ( 'click', getUUID );
 		</script>
